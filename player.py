@@ -107,11 +107,54 @@ class HardAIPlayer(AIPlayer):
                     mark (Mark): The mark this algorithm wants to win for
 
                 Returns:
-                    _type_: _description_
+                    Coordinate: empty cell that maximizes the score for mark
         """
         opponent = Mark.O if mark == Mark.X else Mark.X
         scores = []
         moves = []
+        for move in board.get_empty_cells():
+            next_board = self._board_with_move(board=board, mark=mark, move=move)
+            scores.append(
+                self._minimax(
+                    board=next_board,
+                    mark=mark,
+                    current_mark=opponent,
+                )
+            )
+            moves.append(move)
+        best_index = scores.index(max(scores))
+        return moves[best_index]
+
+    def _minimax(self, board: Board, mark: Mark, current_mark: Mark) -> int:
+        """Implements the minimax algorithm recursively
+
+        Args:
+            board (Board): The state to evaluate
+            mark (Mark): Mark to optimize for
+            current_mark (Mark): the mark current turn of minmax belongs to
+
+        Returns:
+            int: score value
+        """
+        if board.check_and_ret_winner() is not None or board.is_filled:
+            return self._score(board=board, mark=mark)
+        opponent = Mark.O if current_mark == Mark.X else Mark.X
+        scores = []
+        for move in board.get_empty_cells():
+            next_board = self._board_with_move(
+                board=board, mark=current_mark, move=move
+            )
+            scores.append(
+                self._minimax(
+                    board=next_board,
+                    mark=mark,
+                    current_mark=opponent,
+                )
+            )
+
+        if current_mark == mark:
+            return max(scores)
+        return min(scores)
 
     def _score(self, board: Board, mark: Mark) -> int:
         """Scoring function for the min-max algorithm
