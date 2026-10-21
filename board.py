@@ -137,7 +137,7 @@ class Board:
         return False
 
     @classmethod
-    def board_from_marks(cls, grid: list[list[Mark | None]]) -> Board:
+    def board_from_marks(cls, grid: list[list[Mark | None]]) -> "Board":
         """Class method to generate an instance with custom set boards for testing purposes
 
         Args:
