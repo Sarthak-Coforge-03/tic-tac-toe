@@ -129,3 +129,15 @@ def test_set_cell_mark():
     board.set_cell_mark(Mark.X, row=0, col=0)
     assert board.get_cell_at_coord(row=0, col=0).is_filled
     assert board.get_cell_at_coord(row=0, col=0).mark == Mark.X
+
+
+def test_get_empty_cells():
+    """
+    Test to see if get empty cells is working appropriately
+    """
+    empty_board = Board()
+    empty_list = empty_board.get_empty_cells()
+    assert len(empty_list) == 9
+    for grid in DRAWS:
+        board = Board.board_from_marks(grid=grid)
+        assert len(board.get_empty_cells()) == 0
