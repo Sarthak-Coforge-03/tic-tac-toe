@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Protocol, runtime_checkable
-from board import Board, Coordinate
+from board import Board, Coordinate, Mark
 import random
 
 
@@ -48,14 +48,15 @@ class AIPlayer(Player, ABC):
     def __init__(self, name="AI Player"):
         self.name = name
 
-    def _calculate_move(self, board: Board) -> Coordinate:
+    @abstractmethod
+    def _calculate_move(self, board: Board, mark: Mark) -> Coordinate:
         """
         Method to calculate the next move based on board state
         """
-        pass
+        ...
 
-    def turn(self, board: Board) -> Coordinate:
-        return self._calculate_move(board=board)
+    def turn(self, board: Board, mark: Mark) -> Coordinate:
+        return self._calculate_move(board=board, mark=mark)
 
 
 class EasyAIPlayer(AIPlayer):
@@ -68,15 +69,7 @@ class EasyAIPlayer(AIPlayer):
     def __init__(self, name="Easy AI Player"):
         super().__init__(name)
 
-    def turn(self, board: Board):
-        """Take a turn as an AI player
-
-        Returns:
-            tuple[int, int]: Row, col int coordinate for this turn
-        """
-        return super().turn(board=board)
-
-    def _calculate_move(self, board):
+    def _calculate_move(self, board: Board, mark: Mark) -> Coordinate:
         """Calculate the next move by choosing a random available
 
         Args:
@@ -95,24 +88,62 @@ class HardAIPlayer(AIPlayer):
         AIPlayer (Absract class): Abstract class to follow
     """
 
-    def __init__(self, name="Easy AI Player"):
+    def __init__(self, name="Hard AI Player"):
         super().__init__(name)
 
-    def turn(self, board: Board):
-        """Take a turn as an AI player
-
-        Returns:
-            tuple[int, int]: Row, col int coordinate for this turn
-        """
-        return super().turn(board=board)
-
-    def _calculate_move(self, board):
+    def _calculate_move(self, board: Board, mark: Mark) -> Coordinate:
         """Calculate the next move by using minimax
+        This specific implementation of minimax was done by the following instructions:
+        It's X's turn in state 1. X generates the states 2, 3, and 4 and calls minimax on those states.
+        State 2 pushes the score of +10 to state 1's score list, because the game is in an end state.
+        State 3 and 4 are not in end states, so 3 generates states 5 and 6 and calls minimax on them, while state 4 generates states 7 and 8 and calls minimax on them.
+        State 5 pushes a score of -10 onto state 3's score list, while the same happens for state 7 which pushes a score of -10 onto state 4's score list.
+        State 6 and 8 generate the only available moves, which are end states, and so both of them add the score of +10 to the move lists of states 3 and 4.
+        Because it is O's turn in both state 3 and 4, O will seek to find the minimum score, and given the choice between -10 and +10, both states 3 and 4 will yield -10.
+        Finally the score list for states 2, 3, and 4 are populated with +10, -10 and -10 respectively, and state 1 seeking to maximize the score will chose the winning move with score +10, state 2.
+
+                Args:
+                    board (Board): the board object we are playing on
+                    mark (Mark): The mark this algorithm wants to win for
+
+                Returns:
+                    _type_: _description_
+        """
+        opponent = Mark.O if mark == Mark.X else Mark.X
+        scores = []
+        moves = []
+
+    def _score(self, board: Board, mark: Mark) -> int:
+        """Scoring function for the min-max algorithm
 
         Args:
-            board (_type_): _description_
+            board (Board): board object to access state
+            mark (Mark): mark to optimize for
 
         Returns:
-            _type_: _description_
+            int: score given
         """
-        return super()._calculate_move(board)
+        winner = board.check_and_ret_winner()
+        if winner == mark:
+            return 10
+        elif winner and winner != mark:
+            return -10
+        else:
+            return 0
+
+    def _board_with_move(self, board: Board, mark: Mark, move: Coordinate) -> Board:
+        """Copy the current structure of marks in the grid and generate a brand new board from it
+        Additionally append your own 1 extra move on it
+
+        Args:
+            board (Board): Board grid to copy current state of
+            mark (Mark): Mark to make on the chosen move
+            move (Coordinate): where to mark this move
+
+        Returns:
+            Board: current state to copy
+        """
+        grid = [[cell.mark for cell in row] for row in board.board]
+        next_board = Board.board_from_marks(grid=grid)
+        next_board.set_cell_mark(mark=mark, row=move[0], col=move[1])
+        return next_board

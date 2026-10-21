@@ -118,7 +118,7 @@ class Board:
         """
         return self.board[row][col]
 
-    def check_win(self) -> bool:
+    def check_and_ret_winner(self) -> Mark | None:
         """Checks if any of the win combinations have been satisfied
 
         Returns:
@@ -133,8 +133,8 @@ class Board:
                 if all(mark == Mark.X for mark in cell_marks) or all(
                     mark == Mark.O for mark in cell_marks
                 ):
-                    return True
-        return False
+                    return cell_marks[0]
+        return None
 
     @classmethod
     def board_from_marks(cls, grid: list[list[Mark | None]]) -> "Board":

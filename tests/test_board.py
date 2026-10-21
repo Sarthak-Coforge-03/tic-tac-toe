@@ -116,7 +116,7 @@ def test_detect_wins_in_board():
     """
     for grid in WINS:
         board = Board.board_from_marks(grid=grid)
-        assert board.check_win()
+        assert board.check_and_ret_winner()
 
 
 def test_set_cell_mark():
