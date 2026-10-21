@@ -1,5 +1,6 @@
-from board import Mark, Cell, Board
 import pytest
+
+from board import Board, Cell, Mark
 
 WINS = [
     [
