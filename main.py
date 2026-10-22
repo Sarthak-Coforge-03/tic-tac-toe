@@ -12,11 +12,14 @@ def handle_mode_choice():
     """
     choice = None
     while choice not in (1, 2):
-        choice = int(
-            input(
-                "Please input [1] to play against the AI or [2] for multi-player mode:\n"
+        try:
+            choice = int(
+                input(
+                    "Please input [1] to play against the AI or [2] for multi-player mode:\n"
+                )
             )
-        )
+        except:
+            print("Please input an integer!")
     return choice
 
 
@@ -26,9 +29,15 @@ def handle_difficulty_choice():
     """
     difficulty = None
     while difficulty not in (1, 2):
-        difficulty = int(
-            input("Please input [1] for easy difficulty and [2] for hard difficulty:\n")
-        )
+        try:
+            difficulty = int(
+                input(
+                    "Please input [1] for easy difficulty and [2] for hard difficulty:\n"
+                )
+            )
+        except:
+            print("Please input an integer!")
+
     return difficulty
 
 
