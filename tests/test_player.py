@@ -1,5 +1,5 @@
 import pytest
-from player import HumanPlayer, EasyAIPlayer, HardAIPlayer
+from player import EasyAIPlayer, HardAIPlayer
 from board import Board, Mark
 import random
 
@@ -43,3 +43,18 @@ def test_Hard_AI_player_turn_is_valid(board):
     remaining_cells = board.get_empty_cells()
     turn = hard_ai_player.turn(board=board, mark=Mark.O)
     assert turn in remaining_cells
+
+
+def test_hard_never_skips_winning_move(board):
+    """Hard takes the immediate win when given a state close to it
+
+    Args:
+        board (Board): empty board
+    """
+    board.set_cell_mark(Mark.O, 0, 0)
+    board.set_cell_mark(Mark.O, 0, 1)
+    board.set_cell_mark(Mark.X, 1, 0)
+    board.set_cell_mark(Mark.X, 1, 1)
+    board.set_cell_mark(Mark.X, 2, 0)
+    move = HardAIPlayer().turn(board=board, mark=Mark.O)
+    assert move == (0, 2)
