@@ -17,7 +17,7 @@ class Game:
         self.player1 = player1
         self.player2 = player2
         self.board = Board()
-        self.current = self.player1
+        self._current = self.player1
 
     def apply_move(self, row: int, col: int) -> None:
         """Take the row and column provided to apply the move to the board
@@ -31,11 +31,21 @@ class Game:
         """
         if not (0 <= row < 3 and 0 <= col < 3):
             raise ValueError("Move out of bounds")
-        self.board.set_cell_mark(self.current.mark, row, col)
+        self.board.set_cell_mark(self._current.mark, row, col)
         if not self.is_over:
-            self.current = (
-                self.player2 if self.current is self.player1 else self.player1
+            self._current = (
+                self.player2 if self._current is self.player1 else self.player1
             )
+
+    @property
+    def current(self) -> Player:
+        """
+        getter for the current player with active turn
+
+        Returns:
+            Player: Player protocol
+        """
+        return self._current
 
     @property
     def is_over(self) -> bool:
