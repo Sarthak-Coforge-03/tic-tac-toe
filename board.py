@@ -165,3 +165,15 @@ class Board:
                 if not cell.is_filled:
                     result.append((row_idx, col))
         return result
+
+    def to_string(self) -> str:
+        """Return a string representation of the grid
+
+        Returns:
+            str: string representation of every cell
+        """
+        lines = []
+        for row in self.board:
+            cells = [f" {cell.mark.upper()} " if cell.mark else "   " for cell in row]
+            lines.append("|".join(cells))
+        return "\n-----------\n".join(lines)
