@@ -9,8 +9,7 @@ class Player(Protocol):
     """Protocol class defining the function of every kind of player"""
 
     name: str
-
-    def turn(self, row: int, col: int) -> Coordinate: ...
+    mark: Mark
 
 
 class HumanPlayer(Player):
@@ -20,21 +19,9 @@ class HumanPlayer(Player):
         Player (Protocol): Protocol class to follow
     """
 
-    def __init__(self, name="Human Player"):
+    def __init__(self, name="Human Player", mark=Mark.X):
         self.name = name
-
-    def turn(self, row, col) -> Coordinate:
-        """Takes the turn for the human by returning their chosen row and column
-        Normalizes the input 0-indexing for our board management
-
-        Args:
-            row (int): chosen row to mark in this turn
-            col (int): chosen column to mark in this turn
-
-        Returns:
-            _type_: _description_
-        """
-        return (row - 1, col - 1)
+        self.mark = mark
 
 
 class AIPlayer(Player, ABC):
@@ -45,8 +32,9 @@ class AIPlayer(Player, ABC):
         ABC (Abstract): This is an abstract class for every AI implementation
     """
 
-    def __init__(self, name="AI Player"):
+    def __init__(self, name="AI Player", mark=Mark.O):
         self.name = name
+        self.mark = mark
 
     @abstractmethod
     def _calculate_move(self, board: Board, mark: Mark) -> Coordinate:
@@ -66,8 +54,8 @@ class EasyAIPlayer(AIPlayer):
         AIPlayer (AIPlayer): Abstract class for AI player to follow
     """
 
-    def __init__(self, name="Easy AI Player"):
-        super().__init__(name)
+    def __init__(self, name="Easy AI Player", mark=Mark.O):
+        super().__init__(name, mark)
 
     def _calculate_move(self, board: Board, mark: Mark) -> Coordinate:
         """Calculate the next move by choosing a random available
@@ -88,8 +76,8 @@ class HardAIPlayer(AIPlayer):
         AIPlayer (Absract class): Abstract class to follow
     """
 
-    def __init__(self, name="Hard AI Player"):
-        super().__init__(name)
+    def __init__(self, name="Hard AI Player", mark=Mark.O):
+        super().__init__(name, mark)
 
     def _calculate_move(self, board: Board, mark: Mark) -> Coordinate:
         """Calculate the next move by using minimax

@@ -14,14 +14,6 @@ def board() -> Board:
     return Board()
 
 
-def test_human_player_turn():
-    """
-    Tests if the human player normalizes the turn input properly
-    """
-    human = HumanPlayer()
-    assert human.turn(3, 3) == (2, 2)
-
-
 def test_Easy_AI_player_turn(board):
     """Tests if the easy AI player is choosing turns correctly
 
