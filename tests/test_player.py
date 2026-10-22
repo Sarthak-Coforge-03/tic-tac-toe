@@ -1,5 +1,5 @@
 import pytest
-from player import HumanPlayer, EasyAIPlayer
+from player import HumanPlayer, EasyAIPlayer, HardAIPlayer
 from board import Board, Mark
 import random
 
@@ -35,5 +35,19 @@ def test_Easy_AI_player_turn(board):
         for choice in choices
     )
     remaining_cells = board.get_empty_cells()
-    turn = easy_ai_player.turn(board=board)
+    turn = easy_ai_player.turn(board=board, mark=Mark.O)
+    assert turn in remaining_cells
+
+
+def test_Hard_AI_player_turn_is_valid(board):
+    """Tests if the Hard AI player is returning valid coordinates
+
+    Args:
+        board (Board): empty board to begin with
+    """
+    hard_ai_player = HardAIPlayer()
+    choice = random.choice(board.get_empty_cells())
+    board.set_cell_mark(mark=Mark.O, row=choice[0], col=choice[0])
+    remaining_cells = board.get_empty_cells()
+    turn = hard_ai_player.turn(board=board, mark=Mark.O)
     assert turn in remaining_cells
