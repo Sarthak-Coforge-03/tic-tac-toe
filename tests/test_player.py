@@ -21,6 +21,7 @@ def test_Easy_AI_player_turn(board):
         board (Board): empty board to begin with
     """
     easy_ai_player = EasyAIPlayer()
+    random.seed(0)
     choices = random.sample(board.get_empty_cells(), k=5)
     (
         board.set_cell_mark(mark=Mark.X, row=choice[0], col=choice[1])
@@ -37,6 +38,7 @@ def test_Hard_AI_player_turn_is_valid(board):
     Args:
         board (Board): empty board to begin with
     """
+    random.seed(0)
     hard_ai_player = HardAIPlayer()
     choice = random.choice(board.get_empty_cells())
     board.set_cell_mark(mark=Mark.O, row=choice[0], col=choice[0])
