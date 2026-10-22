@@ -17,14 +17,18 @@ This tic-tac-toe game promises a 3 * 3 board along with a CLI intended for human
 1. Cell (Class) -> Cell class to manage the internal state of the board
 2. Board (Class) -> Board class to manage a 3*3 grid of cells
 3. Game (Class) -> Game class to manage the overall state so we can track turns
-4. Player (ABC) -> Player Abstract class so we can handle different kinds of players
+4. Player (Protocol) -> Player Abstract class so we can handle different kinds of players
 5. Human Player (Class) -> Human player class that relies on the input from the human via CLI
-6. AI Player (Class) -> AI player class so a human can contend with an AI
-7. Main.py -> Entry point to the program, game loop, and CLI data collection
+6. AI Player (ABC) -> AI player class so a human can contend with an AI
+7. Easy AI Player (Class) -> Implementation of AI player that chooses a random cell for its move
+8. Hard AI Player (Class) -> Implementation of AI player that uses minimax to decide next move
+9. Main.py -> Entry point to the program, game loop, and CLI data collection
 
 # Decisions
 1. I was considering implementing a difficulty level abstract class to make easy and difficult levels as per strategy pattern. I realized while being superior design, it is over-engineered for the current scope of this assignment
 2. I decided to make a cell class instead of just using a character array because it gives excellent future extensibility/state management while being a minimal complexity trade-off over a simple grid of string arrays.
 
 # What Changed 
-TODO: ...
+1. Originally the player protocol had a turn method define for every player, but because human player and AI player require different arguments for their turn function, it had to be removed as signatured differed.
+2. I was expecting to be marking the board within game state, despite still accessing it through game, more function calls had to be done in the outter main.py to keep inputs and prints away from classes
+3. Additionally, adding a StrEnum for **Mark** was exceptionally helpful that was not originally planned
