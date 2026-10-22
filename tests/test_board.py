@@ -141,3 +141,17 @@ def test_get_empty_cells():
     for grid in DRAWS:
         board = Board.board_from_marks(grid=grid)
         assert len(board.get_empty_cells()) == 0
+
+
+def test_board_to_string():
+    """
+    Test to see if board is accurately converted into string
+    """
+    board = Board.board_from_marks(
+        grid=[
+            [Mark.X, Mark.O, None],
+            [None, Mark.X, Mark.O],
+            [Mark.O, None, Mark.X],
+        ]
+    )
+    assert board.to_string() == "XO \n XO\nO X"
