@@ -174,6 +174,6 @@ class Board:
         """
         lines = []
         for row in self.board:
-            cells = [cell.mark.upper() if cell.mark else " " for cell in row]
-            lines.append("".join(cells))
-        return "\n".join(lines)
+            cells = [f" {cell.mark.upper()} " if cell.mark else "   " for cell in row]
+            lines.append("|".join(cells))
+        return "\n-----------\n".join(lines)

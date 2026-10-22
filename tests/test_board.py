@@ -154,4 +154,6 @@ def test_board_to_string():
             [Mark.O, None, Mark.X],
         ]
     )
-    assert board.to_string() == "XO \n XO\nO X"
+    assert board.to_string() == (
+        " X | O |   \n-----------\n   | X | O \n-----------\n O |   | X "
+    )
