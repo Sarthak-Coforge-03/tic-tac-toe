@@ -114,7 +114,7 @@ def game_loop(game: Game):
         print(game.board.to_string(), end="\n\n")
         if isinstance(game.current, AIPlayer):
             print(f"{game.current.mark.upper()}'s turn (AI)")
-            row, col = game.current.turn(game.board, game.current.mark)
+            row, col = game.current.choose_move(game.board, game.current.mark)
         else:
             row, col = read_move()
         try:

@@ -32,19 +32,19 @@ class AIPlayer(Player, ABC):
         ABC (Abstract): This is an abstract class for every AI implementation
     """
 
-    def __init__(self, name="AI Player", mark=Mark.O):
+    def __init__(
+        self, name="AI Player", mark=Mark.O, rng: random.Random | None = None
+    ):
         self.name = name
         self.mark = mark
+        self.rng = rng if rng is not None else random.Random()
 
     @abstractmethod
-    def _calculate_move(self, board: Board, mark: Mark) -> Coordinate:
+    def choose_move(self, board: Board, mark: Mark) -> Coordinate:
         """
-        Method to calculate the next move based on board state
+        Method to choose the next move based on board state
         """
         ...
-
-    def turn(self, board: Board, mark: Mark) -> Coordinate:
-        return self._calculate_move(board=board, mark=mark)
 
 
 class EasyAIPlayer(AIPlayer):
@@ -54,10 +54,12 @@ class EasyAIPlayer(AIPlayer):
         AIPlayer (AIPlayer): Abstract class for AI player to follow
     """
 
-    def __init__(self, name="Easy AI Player", mark=Mark.O):
-        super().__init__(name, mark)
+    def __init__(
+        self, name="Easy AI Player", mark=Mark.O, rng: random.Random | None = None
+    ):
+        super().__init__(name, mark, rng)
 
-    def _calculate_move(self, board: Board, mark: Mark) -> Coordinate:
+    def choose_move(self, board: Board, mark: Mark) -> Coordinate:
         """Calculate the next move by choosing a random available
 
         Args:
@@ -66,7 +68,7 @@ class EasyAIPlayer(AIPlayer):
         Returns:
             _type_: _description_
         """
-        return random.choice(board.get_empty_cells())
+        return self.rng.choice(board.get_empty_cells())
 
 
 class HardAIPlayer(AIPlayer):
@@ -76,10 +78,12 @@ class HardAIPlayer(AIPlayer):
         AIPlayer (Absract class): Abstract class to follow
     """
 
-    def __init__(self, name="Hard AI Player", mark=Mark.O):
-        super().__init__(name, mark)
+    def __init__(
+        self, name="Hard AI Player", mark=Mark.O, rng: random.Random | None = None
+    ):
+        super().__init__(name, mark, rng)
 
-    def _calculate_move(self, board: Board, mark: Mark) -> Coordinate:
+    def choose_move(self, board: Board, mark: Mark) -> Coordinate:
         """Calculate the next move by using minimax
         This specific implementation of minimax was done by the following instructions:
         It's X's turn in state 1. X generates the states 2, 3, and 4 and calls minimax on those states.
@@ -174,7 +178,6 @@ class HardAIPlayer(AIPlayer):
         Returns:
             Board: current state to copy
         """
-        grid = [[cell.mark for cell in row] for row in board.board]
-        next_board = Board.board_from_marks(grid=grid)
+        next_board = board.copy()
         next_board.set_cell_mark(mark=mark, row=move[0], col=move[1])
         return next_board

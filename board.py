@@ -81,20 +81,11 @@ class Board:
         self._board: list[list[Cell]] = [[Cell() for _ in range(3)] for _ in range(3)]
 
     @property
-    def board(self) -> list[list[Cell]]:
-        """Property to access the board underneath
-
-        Returns:
-            list[list[Cell]]: The array of array of cells
-        """
-        return self._board
-
-    @property
     def is_filled(self) -> bool:
         """
         Property to check if all the cells have been filled inside this board
         """
-        return all(cell.is_filled for row in self.board for cell in row)
+        return all(cell.is_filled for row in self._board for cell in row)
 
     def set_cell_mark(self, mark: Mark, row: int, col: int):
         """set a mark object to the cell
@@ -104,7 +95,7 @@ class Board:
             row (int): row at which to set the mark
             col (int): col at which to set the mark
         """
-        self.board[row][col].place(mark=mark)
+        self._board[row][col].place(mark=mark)
 
     def get_cell_at_coord(self, row: int, col: int) -> Cell:
         """Get cell at coordinate
@@ -116,7 +107,7 @@ class Board:
         Returns:
             Cell: returns a Cell object
         """
-        return self.board[row][col]
+        return self._board[row][col]
 
     def check_and_ret_winner(self) -> Mark | None:
         """Checks if any of the win combinations have been satisfied
@@ -153,6 +144,16 @@ class Board:
                     board.set_cell_mark(mark=mark, row=row_idx, col=col)
         return board
 
+    def copy(self) -> "Board":
+        """Return an independent copy of this board with the same marks placed
+
+        Returns:
+            Board: new Board instance with identical marks
+        """
+        return Board.board_from_marks(
+            [[cell.mark for cell in row] for row in self._board]
+        )
+
     def get_empty_cells(self) -> list[Coordinate]:
         """returns a list of the coordinates of empty cells
 
@@ -160,7 +161,7 @@ class Board:
             list[Coordinate]: list of empty cell coordinates
         """
         result = []
-        for row_idx, row in enumerate(self.board):
+        for row_idx, row in enumerate(self._board):
             for col, cell in enumerate(row):
                 if not cell.is_filled:
                     result.append((row_idx, col))
@@ -173,7 +174,7 @@ class Board:
             str: string representation of every cell
         """
         lines = []
-        for row in self.board:
+        for row in self._board:
             cells = [f" {cell.mark.upper()} " if cell.mark else "   " for cell in row]
             lines.append("|".join(cells))
         return "\n-----------\n".join(lines)

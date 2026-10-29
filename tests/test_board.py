@@ -96,8 +96,7 @@ def test_initialized_empty_board():
     Tests that the new instance of a board is always empty
     """
     board = Board()
-    for row in board.board:
-        assert not (any(cell.is_filled for cell in row))
+    assert len(board.get_empty_cells()) == 9
     assert not board.is_filled
 
 

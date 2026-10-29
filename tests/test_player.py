@@ -20,15 +20,13 @@ def test_Easy_AI_player_turn(board):
     Args:
         board (Board): empty board to begin with
     """
-    easy_ai_player = EasyAIPlayer()
-    random.seed(0)
-    choices = random.sample(board.get_empty_cells(), k=5)
-    (
+    rng = random.Random(0)
+    easy_ai_player = EasyAIPlayer(rng=rng)
+    choices = rng.sample(board.get_empty_cells(), k=5)
+    for choice in choices:
         board.set_cell_mark(mark=Mark.X, row=choice[0], col=choice[1])
-        for choice in choices
-    )
     remaining_cells = board.get_empty_cells()
-    turn = easy_ai_player.turn(board=board, mark=Mark.O)
+    turn = easy_ai_player.choose_move(board=board, mark=Mark.O)
     assert turn in remaining_cells
 
 
@@ -38,12 +36,12 @@ def test_Hard_AI_player_turn_is_valid(board):
     Args:
         board (Board): empty board to begin with
     """
-    random.seed(0)
-    hard_ai_player = HardAIPlayer()
-    choice = random.choice(board.get_empty_cells())
-    board.set_cell_mark(mark=Mark.O, row=choice[0], col=choice[0])
+    rng = random.Random(0)
+    hard_ai_player = HardAIPlayer(rng=rng)
+    choice = rng.choice(board.get_empty_cells())
+    board.set_cell_mark(mark=Mark.O, row=choice[0], col=choice[1])
     remaining_cells = board.get_empty_cells()
-    turn = hard_ai_player.turn(board=board, mark=Mark.O)
+    turn = hard_ai_player.choose_move(board=board, mark=Mark.O)
     assert turn in remaining_cells
 
 
@@ -58,5 +56,5 @@ def test_hard_never_skips_winning_move(board):
     board.set_cell_mark(Mark.X, 1, 0)
     board.set_cell_mark(Mark.X, 1, 1)
     board.set_cell_mark(Mark.X, 2, 0)
-    move = HardAIPlayer().turn(board=board, mark=Mark.O)
+    move = HardAIPlayer().choose_move(board=board, mark=Mark.O)
     assert move == (0, 2)
